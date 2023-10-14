@@ -4,6 +4,11 @@ let playerScore = 0;
 let computerScore = 0;
 let computerChoice;
 let userInput;
+const n = 5;
+
+
+
+// FUNCTIONS
 
 // Step 1: Initialize the game and explain the rules
 
@@ -20,17 +25,10 @@ function getComputerChoice() {
     return computerChoice
 }
 
-welcome()
-
-computerChoice = getComputerChoice().toLowerCase()
 
 
-// Grab user input
-
-
-
-// write a function to play the game -- take in the player and computer selections
-function playGame(userInput, computerInput) {
+// Define a round and return who won the round
+function playRound(userInput, computerInput) {
     let winner;
     if (userInput == computerInput) {
         return `It's a tie! you both chose ${userInput}`
@@ -65,15 +63,15 @@ function playGame(userInput, computerInput) {
 }
 
 
-// Keep score
+// Define a game of n rounds (n is defined)
 
-function game() {
-    for (let i = 1; i < 6; i++) {
+function game(nRounds) {
+    for (let i = 1; i < (nRounds+1); i++) {
         console.log(`round ${i}, the score is ${playerScore} (player) to ${computerScore} (computer)`)
         computerChoice = getComputerChoice().toLowerCase()
-        userInput = prompt(`Select a choice from Rock, Paper, or Scissors!`).toLowerCase()
-        console.log(`you chose ${userInput}, and the computer chose ${computerChoice}`)
-        console.log(playGame(userInput, computerChoice))
+        userChoice = prompt(`Select a choice from Rock, Paper, or Scissors!`).toLowerCase()
+        console.log(`you chose ${userChoice}, and the computer chose ${computerChoice}`)
+        console.log(playRound(userChoice, computerChoice))
     }
     console.log(checkWinner())
 }
@@ -96,6 +94,8 @@ function checkWinner() {
 
 
 
-// Repeat 5 times
+// Play the game
+
+welcome()
 
 game()
