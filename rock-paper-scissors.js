@@ -1,125 +1,85 @@
-// Rock Paper Scissors Project
 const choices = ['rock', 'paper', 'scissors'];
+const n = 5;
 let playerScore = 0;
 let computerScore = 0;
-let computerChoice;
-let userInput;
-const n = 5;
 
-
-
-// FUNCTIONS
-
-// Step 1: Initialize the game and explain the rules
-
-function welcome() {
-    console.log("Welcome to Rock Paper Scissors!")
-}
-
-
-// Grab computer choice with the getComputerChoice function
-
+// Helper function to get computer choice
 function getComputerChoice() {
-    let computerChoice;
-    computerChoice = choices[Math.floor(Math.random() * choices.length)]
-    return computerChoice
+    return choices[Math.floor(Math.random() * choices.length)];
 }
 
-
-
-// Define a round and return who won the round
-function playRound(userChoice) {
-    let winner;
-    let computerChoice = getComputerChoice().toLowerCase()
-    score.textContent = (`you chose ${userChoice}, and the computer chose ${computerChoice}`)
-    if (userChoice == computerChoice) {
-        return `It's a tie! you both chose ${userChoice}`
+// Helper function to determine the winner of a round
+function getRoundWinner(userChoice, computerChoice) {
+    if (userChoice === computerChoice) {
+        return 'tie';
     }
-    else if (userChoice == 'rock' && computerChoice == `scissors`) {
-        playerScore++
-        return  `You Win! Rock beats Scissors!`
+    if (
+        (userChoice === 'rock' && computerChoice === 'scissors') ||
+        (userChoice === 'paper' && computerChoice === 'rock') ||
+        (userChoice === 'scissors' && computerChoice === 'paper')
+    ) {
+        return 'player';
     }
-    else if (userChoice == 'rock' && computerChoice == `paper`) {
-        computerScore++
-        return `You lose! paper beats rock!`
-    }
-    else if (userChoice == 'paper' && computerChoice == 'rock') {
-        playerScore++
-        return `You win! paper beats rock!`
-    }
-    else if (userChoice == `paper` && computerChoice == 'scissors') {
-        computerScore++
-        return `You lose! scissors beats paper!`
-    }
-    else if (userChoice == 'scissors' && computerChoice == 'paper') {
-        playerScore++
-        return `You win! scissors beats paper!`
-    }
-    else if (userChoice == `scissors` && computerChoice == 'rock') {
-        computerScore++
-        return `You lose! rock beats scissors!`
-    }
-    else {
-        return(`There appears to be a problem, please play again!`)
-    }
+    return 'computer';
 }
 
+// Helper function to update the UI
+function updateUI(userChoice, computerChoice, roundResult) {
+    const roundChoices = document.getElementById('choices');
+    const roundOutcome = document.getElementById('outcome');
+    const score = document.getElementById('score');
 
-// Define a game of n rounds (n is defined)
-
-function game(nRounds) {
-    for (let i = 1; i < (nRounds+1); i++) {
-        score.textContent = (`round ${i}, the score is ${playerScore} (player) to ${computerScore} (computer)`)
-        outcome.textContent = playRound()
-        
-        
+    roundChoices.textContent = `You chose ${userChoice}, and the computer chose ${computerChoice}`;
+    if (roundResult === 'tie') {
+        roundOutcome.textContent = `It's a tie! You both chose ${userChoice}`;
+    } else if (roundResult === 'player') {
+        playerScore++;
+        roundOutcome.textContent = `You win! ${userChoice} beats ${computerChoice}!`;
+    } else {
+        computerScore++;
+        roundOutcome.textContent = `You lose! ${computerChoice} beats ${userChoice}!`;
     }
-    outcome.textContent = checkWinner()
+    score.textContent = `Current Score: Player ${playerScore} - ${computerScore} Computer`;
+
+    if (playerScore >4 || computerScore > 4) {
+        alert(`Game over! Final score is Player ${playerScore} - ${computerScore} Computer `)
+        window.location.reload();
+    }
+    
+
 }
 
-function checkWinner() {
-    if (playerScore > computerScore) {
-        return `Player Wins! ${playerScore} to ${computerScore}`
-    }
-    else if (playerScore < computerScore) {
-        return `Player Loses! ${playerScore} to ${computerScore}`
-    }
-    else if (playerScore == computerScore) {
-        return `Draw! ${playerScore} to ${computerScore}`
-    }
-}
-
-
-// Create Buttons
-
-const btns = document.querySelectorAll('div button')
-
-for (let i = 0; i < btns.length; i++) {
-    btns[i].addEventListener('click', (event) => {
-        playRound(event.target.id);
-        // console.log(event.target.id)
-    });
-}
-
-// Add Div to show current score
-
+// Event delegation for button clicks
 const container = document.querySelector('.container');
+container.addEventListener('click', (event) => {
+    if (event.target.tagName === 'BUTTON') {
+        const userChoice = event.target.id;
+        const computerChoice = getComputerChoice();
+        const roundResult = getRoundWinner(userChoice, computerChoice);
+        updateUI(userChoice, computerChoice, roundResult);
+
+        if (playerScore >= n || computerScore >= n) {
+            // Game over logic here
+        }
+    }
+});
+
+// Initial UI setup
+const score = document.createElement('h1');
+score.id = 'score';
+score.textContent = `Current Score: Player ${playerScore} - ${computerScore} Computer`;
+
+const roundOutcome = document.createElement('h2');
+roundOutcome.id = 'outcome';
+roundOutcome.textContent = 'Click on a button to start the game!';
+
+const roundChoices = document.createElement('h2');
+roundChoices.id = 'choices';
 
 const div = document.createElement('div');
 div.style.border = '6px solid black';
-const score = document.createElement('h1');
-score.id = ('score')
-const outcome = document.createElement('h2');
-outcome.id = ('outcome')
-outcome.textContent = 'Click on a button to start the game!'
-
-div.append(score,outcome);
+div.append(score, roundOutcome, roundChoices);
 container.appendChild(div);
 
-
-// Play the game
-
-welcome()
-console.log(btns)
-
-// game(n)
+// Welcome message
+console.log("Welcome to Rock Paper Scissors!");
