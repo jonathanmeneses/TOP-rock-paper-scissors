@@ -31,13 +31,13 @@ function getComputerChoice() {
 function playRound(userChoice) {
     let winner;
     let computerChoice = getComputerChoice().toLowerCase()
-    console.log(`you chose ${userChoice}, and the computer chose ${computerChoice}`)
+    score.textContent = (`you chose ${userChoice}, and the computer chose ${computerChoice}`)
     if (userChoice == computerChoice) {
         return `It's a tie! you both chose ${userChoice}`
     }
     else if (userChoice == 'rock' && computerChoice == `scissors`) {
         playerScore++
-        return `You Win! Rock beats Scissors!`
+        return  `You Win! Rock beats Scissors!`
     }
     else if (userChoice == 'rock' && computerChoice == `paper`) {
         computerScore++
@@ -60,7 +60,7 @@ function playRound(userChoice) {
         return `You lose! rock beats scissors!`
     }
     else {
-        console.log(`There appears to be a problem, please play again!`)
+        return(`There appears to be a problem, please play again!`)
     }
 }
 
@@ -69,11 +69,12 @@ function playRound(userChoice) {
 
 function game(nRounds) {
     for (let i = 1; i < (nRounds+1); i++) {
-        console.log(`round ${i}, the score is ${playerScore} (player) to ${computerScore} (computer)`)
+        score.textContent = (`round ${i}, the score is ${playerScore} (player) to ${computerScore} (computer)`)
+        outcome.textContent = playRound()
         
-        console.log(playRound(userChoice, computerChoice))
+        
     }
-    console.log(checkWinner())
+    outcome.textContent = checkWinner()
 }
 
 function checkWinner() {
@@ -100,18 +101,20 @@ for (let i = 0; i < btns.length; i++) {
     });
 }
 
-const rock = document.querySelector('#rock');
-const paper = document.querySelector('#paper');
-const scissors = document.querySelector('#scissors');
-rock.addEventListener('click', function (event) {
-    event.target.style.background = 'blue';
-});
-paper.addEventListener('click', function (event) {
-    event.target.style.background = 'blue';
-});
-scissors.addEventListener('click', function (event) {
-    event.target.style.background = 'blue';
-});
+// Add Div to show current score
+
+const container = document.querySelector('.container');
+
+const div = document.createElement('div');
+div.style.border = '6px solid black';
+const score = document.createElement('h1');
+score.id = ('score')
+const outcome = document.createElement('h2');
+outcome.id = ('outcome')
+outcome.textContent = 'Click on a button to start the game!'
+
+div.append(score,outcome);
+container.appendChild(div);
 
 
 // Play the game
